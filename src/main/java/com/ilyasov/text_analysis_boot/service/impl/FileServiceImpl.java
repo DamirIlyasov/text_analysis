@@ -23,13 +23,10 @@ public class FileServiceImpl implements FileService {
   public ArrayList<String> getPositiveWords() {
     ArrayList<String> positiveWords = new ArrayList<>();
     try {
-      StringBuilder stringBuilder = new StringBuilder();
       String line;
       while ((line = positive.readLine()) != null) {
-        stringBuilder.append(line);
+        positiveWords.add(line.toLowerCase());
       }
-      String positiveString = stringBuilder.toString();
-      positiveWords = new ArrayList<>(Arrays.asList(positiveString.split(" ")));
     }
     catch (IOException e) {
       e.printStackTrace();
@@ -41,15 +38,10 @@ public class FileServiceImpl implements FileService {
   public ArrayList<String> getNegativeWords() {
     ArrayList<String> negativeWords = new ArrayList<>();
     try {
-
-
-      StringBuilder stringBuilder = new StringBuilder();
       String line;
       while ((line = negative.readLine()) != null) {
-        stringBuilder.append(line);
+        negativeWords.add(line.toLowerCase());
       }
-      String negativeString = stringBuilder.toString();
-      negativeWords = new ArrayList<>(Arrays.asList(negativeString.split(" ")));
     }
     catch (IOException e) {
       e.printStackTrace();

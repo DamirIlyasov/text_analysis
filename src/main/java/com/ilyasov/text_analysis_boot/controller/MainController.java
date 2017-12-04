@@ -2,6 +2,7 @@ package com.ilyasov.text_analysis_boot.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ilyasov.text_analysis_boot.entity.DataRecord;
+import com.ilyasov.text_analysis_boot.entity.Result;
 import com.ilyasov.text_analysis_boot.responses.SentimentResponse;
 import com.ilyasov.text_analysis_boot.service.DataRecordService;
 import com.ilyasov.text_analysis_boot.service.FileService;
@@ -27,18 +28,22 @@ public class MainController {
   private final String APIKEY = "7b2d9d2f8316dd9495ef8c239db8ce31a55b7ab2";
   @Autowired
   FileService fileService;
-  private ArrayList<String> positiveWords = fileService.getPositiveWords();
-  private ArrayList<String> negativeWords = fileService.getNegativeWords();
+  private ArrayList<String> positiveWords;
+  private ArrayList<String> negativeWords;
 
   @Autowired
   DataRecordService dataRecordService;
 
 
   @RequestMapping(value = "/sentiment/send", method = RequestMethod.POST)
-  public void getTextSentiment(@RequestParam("text") String text) throws IOException {
+  public void getTextSentiment(@RequestParam("text") String text,
+                               @RequestParam("date") Date date) throws IOException {
+
+    positiveWords = fileService.getPositiveWords();
+    negativeWords = fileService.getNegativeWords();
     int positiveCount = 0;
     int negativeCount = 0;
-    String inputString[] = text.split(" ");
+    String inputString[] = text.toLowerCase().split(" ");
     for (String anInputString : inputString) {
       if (positiveWords.contains(anInputString)) {
         positiveCount++;
@@ -47,7 +52,7 @@ public class MainController {
         negativeCount++;
       }
     }
-    double mood = (positiveCount - negativeCount) / inputString.length;
+    double mood = (double) (positiveCount - negativeCount) / (double) inputString.length;
 
 //    MultiValueMap<String, String> parametersMap = new LinkedMultiValueMap<String, String>();
 //    parametersMap.add("text", text);
@@ -55,14 +60,14 @@ public class MainController {
 //    String response = restTemplate.postForObject("https://api.repustate.com/v3/" + APIKEY + "/score.json", parametersMap, String.class);
 //    SentimentResponse sentimentResponse = mapper.readValue(response, SentimentResponse.class);
     DataRecord dataRecord = new DataRecord();
-    dataRecord.setDate(new Date());
+    dataRecord.setDate(date);
 //    dataRecord.setValue(sentimentResponse.getScore());
     dataRecord.setValue(mood);
     dataRecordService.save(dataRecord);
   }
 
   @RequestMapping(value = "/records", method = RequestMethod.GET)
-  public List<DataRecord> getRecords() {
-    return dataRecordService.getAll();
+  public Result getRecords() {
+    return new Result(dataRecordService.getAll());
   }
 }
