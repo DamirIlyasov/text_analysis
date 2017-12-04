@@ -1,11 +1,17 @@
 package com.ilyasov.text_analysis_boot.service.impl;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.ilyasov.text_analysis_boot.service.FileService;
+import com.ilyasov.text_analysis_boot.service.TextService;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.ru.RussianAnalyzer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,18 +21,24 @@ import org.springframework.stereotype.Service;
 public class FileServiceImpl implements FileService {
   private BufferedReader positive = new BufferedReader(new FileReader("/home/damir/ideaProjects/text-analysis111/src/main/resources/positive.txt"));
   private BufferedReader negative = new BufferedReader(new FileReader("/home/damir/ideaProjects/text-analysis111/src/main/resources/negative.txt"));
+  private Analyzer analyzer = new RussianAnalyzer();
+
+  @Autowired
+  TextService textService;
 
   public FileServiceImpl() throws FileNotFoundException {
   }
 
   @Override
-  public ArrayList<String> getPositiveWords() {
-    ArrayList<String> positiveWords = new ArrayList<>();
+  public List<String> getPositiveWords() {
+    List<String> positiveWords = new ArrayList<>();
+    StringBuilder stringText = new StringBuilder();
     try {
       String line;
       while ((line = positive.readLine()) != null) {
-        positiveWords.add(line.toLowerCase());
+        stringText.append(line.toLowerCase() + " ");
       }
+      positiveWords = textService.convert(stringText);
     }
     catch (IOException e) {
       e.printStackTrace();
@@ -35,13 +47,15 @@ public class FileServiceImpl implements FileService {
   }
 
   @Override
-  public ArrayList<String> getNegativeWords() {
-    ArrayList<String> negativeWords = new ArrayList<>();
+  public List<String> getNegativeWords() {
+    List<String> negativeWords = new ArrayList<>();
+    StringBuilder stringText = new StringBuilder();
     try {
       String line;
       while ((line = negative.readLine()) != null) {
-        negativeWords.add(line.toLowerCase());
+        stringText.append(line.toLowerCase() + " ");
       }
+      negativeWords = textService.convert(stringText);
     }
     catch (IOException e) {
       e.printStackTrace();

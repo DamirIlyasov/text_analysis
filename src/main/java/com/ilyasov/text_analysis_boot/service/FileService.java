@@ -1,12 +1,12 @@
 package com.ilyasov.text_analysis_boot.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author damir
  */
 public interface FileService {
-  ArrayList<String> getPositiveWords();
-  ArrayList<String> getNegativeWords();
+  List<String> getPositiveWords();
+
+  List<String> getNegativeWords();
 }

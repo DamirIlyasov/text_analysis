@@ -1,24 +1,21 @@
 package com.ilyasov.text_analysis_boot.controller;
 
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ilyasov.text_analysis_boot.entity.DataRecord;
 import com.ilyasov.text_analysis_boot.entity.Result;
-import com.ilyasov.text_analysis_boot.responses.SentimentResponse;
 import com.ilyasov.text_analysis_boot.service.DataRecordService;
 import com.ilyasov.text_analysis_boot.service.FileService;
+import com.ilyasov.text_analysis_boot.service.TextService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @RestController
 public class MainController {
@@ -26,25 +23,30 @@ public class MainController {
   private RestTemplate restTemplate = new RestTemplate();
   private ObjectMapper mapper = new ObjectMapper();
   private final String APIKEY = "7b2d9d2f8316dd9495ef8c239db8ce31a55b7ab2";
-  @Autowired
-  FileService fileService;
-  private ArrayList<String> positiveWords;
-  private ArrayList<String> negativeWords;
+  private List<String> positiveWords;
+  private List<String> negativeWords;
+
+  private FileService fileService;
+
+  private TextService textService;
+
+  private DataRecordService dataRecordService;
 
   @Autowired
-  DataRecordService dataRecordService;
-
-
-  @RequestMapping(value = "/sentiment/send", method = RequestMethod.POST)
-  public void getTextSentiment(@RequestParam("text") String text,
-                               @RequestParam("date") Date date) throws IOException {
-
+  public MainController(FileService fileService, TextService textService, DataRecordService dataRecordService) {
+    this.fileService = fileService;
+    this.textService = textService;
+    this.dataRecordService = dataRecordService;
     positiveWords = fileService.getPositiveWords();
     negativeWords = fileService.getNegativeWords();
+  }
+
+  @RequestMapping(value = "/sentiment/send", method = RequestMethod.POST)
+  public void getTextSentiment(@RequestParam("text") String text) throws IOException {
     int positiveCount = 0;
     int negativeCount = 0;
-    String inputString[] = text.toLowerCase().split(" ");
-    for (String anInputString : inputString) {
+    List<String> inputedStrings = textService.convert(text.toLowerCase());
+    for (String anInputString : inputedStrings) {
       if (positiveWords.contains(anInputString)) {
         positiveCount++;
       }
@@ -52,7 +54,7 @@ public class MainController {
         negativeCount++;
       }
     }
-    double mood = (double) (positiveCount - negativeCount) / (double) inputString.length;
+    double mood = (double) (positiveCount - negativeCount) / (double) inputedStrings.size();
 
 //    MultiValueMap<String, String> parametersMap = new LinkedMultiValueMap<String, String>();
 //    parametersMap.add("text", text);
@@ -60,7 +62,7 @@ public class MainController {
 //    String response = restTemplate.postForObject("https://api.repustate.com/v3/" + APIKEY + "/score.json", parametersMap, String.class);
 //    SentimentResponse sentimentResponse = mapper.readValue(response, SentimentResponse.class);
     DataRecord dataRecord = new DataRecord();
-    dataRecord.setDate(date);
+    dataRecord.setDate(new Date());
 //    dataRecord.setValue(sentimentResponse.getScore());
     dataRecord.setValue(mood);
     dataRecordService.save(dataRecord);
