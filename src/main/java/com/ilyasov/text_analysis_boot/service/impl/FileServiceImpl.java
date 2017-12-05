@@ -1,9 +1,6 @@
 package com.ilyasov.text_analysis_boot.service.impl;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +16,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class FileServiceImpl implements FileService {
-  private BufferedReader positive = new BufferedReader(new FileReader("/home/damir/ideaProjects/text-analysis111/src/main/resources/positive.txt"));
-  private BufferedReader negative = new BufferedReader(new FileReader("/home/damir/ideaProjects/text-analysis111/src/main/resources/negative.txt"));
+  String filePath = new File("").getAbsolutePath();
+
+  private BufferedReader positive = new BufferedReader(new FileReader(filePath + "/src/main/resources/positive.txt"));
+  private BufferedReader negative = new BufferedReader(new FileReader(filePath + "/src/main/resources/negative.txt"));
   private Analyzer analyzer = new RussianAnalyzer();
 
   @Autowired
   TextService textService;
+
 
   public FileServiceImpl() throws FileNotFoundException {
   }
