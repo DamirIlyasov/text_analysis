@@ -1,6 +1,7 @@
 package com.ilyasov.text_analysis_boot.controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -62,7 +63,38 @@ public class MainController {
 //    String response = restTemplate.postForObject("https://api.repustate.com/v3/" + APIKEY + "/score.json", parametersMap, String.class);
 //    SentimentResponse sentimentResponse = mapper.readValue(response, SentimentResponse.class);
     DataRecord dataRecord = new DataRecord();
-    dataRecord.setDate(new Date());
+    Date curerntDate = new Date();
+    StringBuilder dateString = new StringBuilder();
+    if (curerntDate.getDate() < 10) {
+      dateString.append("0" + curerntDate.getDate());
+    }
+    else {
+      dateString.append(curerntDate.getDate());
+    }
+    dateString.append(".");
+    if (curerntDate.getMonth() < 10) {
+      dateString.append("0" + curerntDate.getMonth());
+    }
+    else {
+      dateString.append(curerntDate.getMonth());
+    }
+    dateString.append(" ");
+    if (curerntDate.getHours() < 10) {
+      dateString.append("0" + curerntDate.getHours());
+    }
+    else {
+      dateString.append(curerntDate.getHours());
+    }
+    dateString.append(":");
+    if (curerntDate.getMinutes() < 10) {
+      dateString.append("0" + curerntDate.getMinutes());
+    }
+    else {
+      dateString.append(curerntDate.getMinutes());
+    }
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
+    simpleDateFormat.format(new Date());
+    dataRecord.setDate(dateString.toString());
 //    dataRecord.setValue(sentimentResponse.getScore());
     dataRecord.setValue(mood);
     dataRecordService.save(dataRecord);
