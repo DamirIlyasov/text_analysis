@@ -44,6 +44,9 @@ public class MainController {
     int positiveCount = 0;
     int negativeCount = 0;
     List<String> inputedStrings = textService.convert(requestPojo.getText().toLowerCase());
+    if (inputedStrings.size() == 0) {
+      return;
+    }
     for (String anInputString : inputedStrings) {
       if (positiveWords.contains(anInputString)) {
         positiveCount++;
