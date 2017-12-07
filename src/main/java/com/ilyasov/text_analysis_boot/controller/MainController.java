@@ -38,7 +38,7 @@ public class MainController {
 
   @RequestMapping(value = "/sentiment/send", method = RequestMethod.POST)
   public void getTextSentiment(@RequestBody RequestPojo requestPojo) throws IOException {
-    if (requestPojo.getText() == null || requestPojo.getText().isEmpty() ){
+    if (requestPojo.getText() == null || requestPojo.getText().isEmpty() || requestPojo.getText().equals("")){
       return;
     }
     int positiveCount = 0;
