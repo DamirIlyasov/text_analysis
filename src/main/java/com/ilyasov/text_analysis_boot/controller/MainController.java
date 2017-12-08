@@ -37,16 +37,16 @@ public class MainController {
   }
 
   @RequestMapping(value = "/sentiment/send", method = RequestMethod.POST)
-  public void getTextSentiment(@RequestBody RequestPojo requestPojo) throws IOException {
-    if (requestPojo.getText() == null || requestPojo.getText().isEmpty() || requestPojo.getText().equals("")){
+  public void getTextSentiment(@RequestBody RequestPojo requestPojo) {
+    if (requestPojo.getText() == null || requestPojo.getText().isEmpty()) {
       return;
     }
-    int positiveCount = 0;
-    int negativeCount = 0;
     List<String> inputedStrings = textService.convert(requestPojo.getText().toLowerCase());
     if (inputedStrings.size() == 0) {
       return;
     }
+    int positiveCount = 0;
+    int negativeCount = 0;
     for (String anInputString : inputedStrings) {
       if (positiveWords.contains(anInputString)) {
         positiveCount++;
