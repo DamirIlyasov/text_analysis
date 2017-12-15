@@ -1,2 +1,2 @@
-![alt text](https://psv4.userapi.com/c816326/u95899566/docs/bf3b4c329169/Prilozhenie.png?extra=_ilApES3127H5jzZA4a5q_uqMSBDHMDvz7iD-dxVNii5M7t1P78RxYRegHRVSu-leaCORCxiDWvRe8r0mynhsMkGqAPcxgNaryni1ijyqedhNzmX03JJn6GJ25XO9Rcc7WEXhWnfHXjVmQ)
+![alt text](https://psv4.userapi.com/c816326/u95899566/docs/6d71b40e6f71/Prilozhenie.png?extra=r198wurNzLDTwvrvMu20zolHHWEyr0H-t7aoMlMtu4gDjRTnYFXPpEeEuWLgyQQejLaV_6awnKgrv2pfyYxlUqHbF88s0qWE33WyLVjSsVgcK6yqoLzKqNGFFF4ssWuhaKLRGoSLOb-dRTk)
 
